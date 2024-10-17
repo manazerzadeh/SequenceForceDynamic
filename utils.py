@@ -128,9 +128,31 @@ def finger_melt_Forces(subjs_force: pd.DataFrame) -> pd.DataFrame:
     subj_force_melted = pd.melt(subjs_force, 
                     id_vars=['state', 'timeReal', 'time','BN', 'TN', 'SubNum', 'seqType', 
                                                       'board', 'day', 'trialPoints', 
-                                                      'latePress','hardPress', 'seqError'], 
+                                                      'latePress','hardPress', 'seqError', 'IPI0', 'MT'], 
                     value_vars =  [_ for _ in subjs_force.columns if _.startswith('force')],
                     var_name='Force_Number', 
                     value_name='Force_Value')
     
     return subj_force_melted
+
+
+
+def cut_force(subjs_force: pd.DataFrame, side_padding) -> pd.DataFrame:
+    """
+    Cuts the force data to the same length as the IPI data
+    """
+    subjs_force = subjs_force[(subjs_force['IPI0'] <= subjs_force['time'] + side_padding) & (subjs_force['time'] <= subjs_force['IPI0'] + subjs_force['MT'] + side_padding)]
+    return subjs_force
+
+
+
+def cut_force_left(subjs_force: pd.DataFrame) -> pd.DataFrame:
+
+    subjs_force = subjs_force[(subjs_force['IPI0'] >= subjs_force['time'])]
+    return subjs_force
+
+
+def cut_force_right(subjs_force: pd.DataFrame) -> pd.DataFrame:
+
+    subjs_force = subjs_force[(subjs_force['IPI0'] + subjs_force['MT'] <= subjs_force['time'])]
+    return subjs_force
