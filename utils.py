@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 from typing import List
 
+data_dir = "./SL3/"
 path = "./SL3/SL3"
-
 path_misc = "./SL3_miscs/"
 
 total_sub_num = 16
@@ -56,6 +56,16 @@ def add_IPI(subj: pd.DataFrame):
         subj[new_col] = subj[col2] - subj[col1]
 
     subj['IPI0'] = subj['RT1']
+
+
+
+def add_seq_pressed(subj: pd.DataFrame):
+    """
+    Adds the sequence pressed by the subject to the dataframe
+    """
+
+    subj['seqPressed'] = subj['resp1'].astype(str) + subj['resp2'].astype(str) + subj['resp3'].astype(str) + subj['resp4'].astype(str) + subj['resp5'].astype(str)
+    
 
 
 
